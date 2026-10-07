@@ -174,3 +174,69 @@ a:focus-visible, .btn:focus-visible { outline: 3px solid var(--c); outline-offse
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .rv { opacity: 1; transform: none; }
 }
+
+/* ============ Tema profesional (sobrescribe lo anterior) ============ */
+:root {
+  --ink: #081a33;
+  --navy: #0d2b55;
+  --paper: #f3f6fb;
+  --title: #0b3270;
+  --text: #22344b;
+  --muted: #55687f;
+  --line: #dbe3ee;
+  --c: #3578e0;
+  --i: #0f9a8b;
+  --d: #dc3a31;
+}
+body { background: var(--paper); color: var(--text); }
+h1, h2, h3 { color: var(--title); }
+.dark h2, .dark h3, .stage h2, .stage h3, .end h2, .hero h1, .questions h3, .cycle h3 { color: #ffffff; }
+
+/* Barra superior */
+.nav { position: fixed; top: 4px; left: 0; right: 0; z-index: 40; display: flex; justify-content: space-between; align-items: center; padding: .8rem clamp(1rem, 4vw, 3rem); background: rgba(8, 26, 51, .82); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,.08); }
+.brand { display: inline-flex; align-items: center; gap: .55rem; color: #fff; text-decoration: none; font-family: var(--display); font-weight: 700; }
+.nav-links { display: none; gap: 1.6rem; }
+.nav-links a { color: #c4d3e6; text-decoration: none; font-size: .95rem; font-weight: 500; transition: color .2s; }
+.nav-links a:hover { color: #fff; }
+.stage-visual { top: 3.6rem; }
+
+/* Hero oscuro */
+.hero { background: radial-gradient(60% 70% at 80% 35%, rgba(53,120,224,.35) 0%, transparent 70%), linear-gradient(160deg, #06142a 0%, #0d2b55 100%); position: relative; color: #fff; padding-top: 7rem; }
+.hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(75% 75% at 60% 40%, #000 30%, transparent 100%); -webkit-mask-image: radial-gradient(75% 75% at 60% 40%, #000 30%, transparent 100%); }
+.hero-grid { position: relative; }
+.kicker { color: #8fbaff; }
+.sub { color: #bccbe0; }
+.hero .tri-line { stroke: #fff; }
+.hero .tri-fill { fill: rgba(255,255,255,.06); }
+.hero .node-label { fill: #fff; }
+.hero .tri-shield { color: #fff; }
+.hero .node .dot { stroke: #0d2b55; stroke-width: 3; }
+.btn { background: var(--c); border-radius: 10px; box-shadow: 0 10px 24px -10px rgba(53,120,224,.9); }
+.btn:hover { background: #4a8cf0; }
+
+/* Secciones claras */
+.sec h2::after { content: ''; display: block; width: 56px; height: 4px; border-radius: 2px; margin-top: .6rem; background: linear-gradient(90deg, var(--c), var(--i)); }
+.dark h2::after, .end h2::after { background: linear-gradient(90deg, #6aa4ff, #3fd0bf); }
+.intro, .card p, .case-row p, .t-body p { color: var(--muted); }
+.alt { background: #ffffff; }
+.card, .case-row { border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(8,26,51,.04), 0 12px 28px -18px rgba(8,26,51,.25); transition: transform .3s ease, box-shadow .3s ease; }
+.alt .card { background: var(--paper); }
+.card:hover, .case-row:hover { transform: translateY(-3px); box-shadow: 0 18px 34px -18px rgba(8,26,51,.35); }
+.case-row h3 { color: var(--nc); }
+.questions { background: linear-gradient(160deg, #081a33, #0d2b55); border-radius: 16px; box-shadow: 0 24px 50px -28px rgba(8,26,51,.7); }
+.stage { background: linear-gradient(180deg, #081a33 0%, #0b2347 100%); }
+.dark { background: linear-gradient(160deg, #081a33, #0d2b55); }
+.end { background: #06142a; }
+.t-year { color: var(--title); }
+.t-item::before { background: #fff; border-color: var(--c); }
+.plain-ico { background: var(--title); border-radius: 12px; }
+.block-ico, .case-ico, .q-ico { border-radius: 12px; }
+
+@media (min-width: 960px) {
+  .nav-links { display: flex; }
+}
+
+/* ============ Pantalla completa: anula los estilos por defecto de Vite ============ */
+html, body { margin: 0; padding: 0; width: 100%; min-width: 0; display: block; place-items: initial; overflow-x: hidden; }
+#root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
+main { width: 100%; }

@@ -174,8 +174,19 @@ export default function App() {
     <main>
       <div className="progress" ref={bar} />
 
+      <nav className="nav" aria-label="Secciones">
+        <a className="brand" href="#top"><Icon name="shield" size={22} /> Tríada de la información</a>
+        <div className="nav-links">
+          <a href="#que-es">Concepto</a>
+          <a href="#triada">Los tres pilares</a>
+          <a href="#equilibrio">Equilibrio</a>
+          <a href="#gestion">Gestión</a>
+          <a href="#normativa">Normativa</a>
+        </div>
+      </nav>
+
       {/* Hero */}
-      <header className="hero">
+      <header className="hero" id="top">
         <div className="wrap hero-grid">
           <div className="hero-text">
             <p className="kicker"><Icon name="star" size={16} /> Gestión de Seguridad de la Información, Chile</p>
@@ -241,7 +252,7 @@ export default function App() {
       </section>
 
       {/* Equilibrio */}
-      <section className="sec alt">
+      <section id="equilibrio" className="sec alt">
         <div className="wrap">
           <h2 className="rv">Los tres pilares compiten entre sí</h2>
           <p className="intro rv">Proteger no es maximizar un vértice. La gestión de seguridad busca el equilibrio que corresponde al riesgo y al negocio de cada organización.</p>
@@ -274,7 +285,7 @@ export default function App() {
       </section>
 
       {/* Gestion de riesgos */}
-      <section className="sec dark">
+      <section id="gestion" className="sec dark">
         <div className="wrap">
           <h2 className="rv">Cómo se gestiona: del activo al control</h2>
           <p className="intro rv">En un Sistema de Gestión de Seguridad de la Información (SGSI), la tríada es el criterio con el que se mide el impacto de cada riesgo. El proceso es un ciclo, no un proyecto que termina.</p>
@@ -292,7 +303,7 @@ export default function App() {
       </section>
 
       {/* Marco chileno */}
-      <section className="sec">
+      <section id="normativa" className="sec">
         <div className="wrap">
           <h2 className="rv">El marco normativo en Chile</h2>
           <p className="intro rv">Cada norma protege uno o varios vértices de la tríada. Los iconos indican cuáles.</p>
