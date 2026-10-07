@@ -18,6 +18,9 @@ const PATHS = {
   doc: <path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6" />,
   star: <path d="m12 3 2.600 5.600 6.100.7-4.500 4.200 1.200 6L12 16.500 6.600 19.500l1.200-6L3.300 9.300l6.100-.7z" />,
   down: <path d="M12 4v16M6 14l6 6 6-6" />,
+  menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  close: <path d="M6 6l12 12M18 6 6 18" />,
+  external: <path d="M14 4h6v6M20 4 10 14M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />,
   layers: <path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5" />,
 }
 
@@ -26,6 +29,18 @@ function Icon({ name, size = 24, ...rest }) {
     <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor"
       strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...rest}>
       {PATHS[name]}
+    </svg>
+  )
+}
+
+function Logo({ size = 30 }) {
+  return (
+    <svg viewBox="0 0 64 64" width={size} height={size} aria-hidden="true">
+      <rect width="64" height="64" rx="14" fill="#0a2150" stroke="rgba(255,255,255,.22)" strokeWidth="2" />
+      <path d="M32 14 14 46h36z" fill="rgba(255,255,255,.1)" stroke="#fff" strokeWidth="3" strokeLinejoin="round" />
+      <circle cx="32" cy="14" r="7" fill="#3578e0" stroke="#0a2150" strokeWidth="2" />
+      <circle cx="14" cy="46" r="7" fill="#0f9a8b" stroke="#0a2150" strokeWidth="2" />
+      <circle cx="50" cy="46" r="7" fill="#dc3a31" stroke="#0a2150" strokeWidth="2" />
     </svg>
   )
 }
@@ -93,6 +108,13 @@ const EXTRA = [
   ['clock', 'Trazabilidad', 'Poder reconstruir quién hizo qué, cuándo y desde dónde.'],
 ]
 
+const LINKS = [['que-es', 'Concepto'], ['triada', 'Los tres pilares'], ['equilibrio', 'Equilibrio'], ['gestion', 'Gestión'], ['normativa', 'Normativa']]
+const SOURCES = [
+  ['Biblioteca del Congreso Nacional', 'https://www.bcn.cl/leychile'],
+  ['Agencia Nacional de Ciberseguridad (ANCI)', 'https://anci.gob.cl'],
+  ['CSIRT de Gobierno', 'https://www.csirt.gob.cl'],
+]
+
 const byKey = Object.fromEntries(PILLARS.map((p) => [p.key, p]))
 
 /* ---------- Triángulo ---------- */
@@ -134,6 +156,9 @@ function Tag({ k }) {
 /* ---------- App ---------- */
 export default function App() {
   const [active, setActive] = useState(null)
+  const [scrolled, setScrolled] = useState(false)
+  const [menu, setMenu] = useState(false)
+  const [section, setSection] = useState('top')
   const bar = useRef(null)
   const blocks = useRef([])
 
@@ -143,6 +168,7 @@ export default function App() {
       const h = document.documentElement
       const p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1)
       if (bar.current) bar.current.style.transform = `scaleX(${p})`
+      setScrolled(h.scrollTop > 30)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -168,21 +194,32 @@ export default function App() {
     return () => io.disconnect()
   }, [])
 
+  // Seccion visible para resaltar el menu
+  useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setSection(e.target.id) })
+    }, { rootMargin: '-45% 0px -50% 0px' })
+    ;['top', ...LINKS.map((l) => l[0])].forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el) })
+    return () => io.disconnect()
+  }, [])
+
   const current = active ? byKey[active] : null
 
   return (
     <main>
       <div className="progress" ref={bar} />
 
-      <nav className="nav" aria-label="Secciones">
-        <a className="brand" href="#top"><Icon name="shield" size={22} /> Tríada de la información</a>
+      <nav className={`nav ${scrolled || menu ? 'solid' : ''} ${menu ? 'open' : ''}`} aria-label="Secciones">
+        <a className="brand" href="#top" onClick={() => setMenu(false)}><Logo size={32} /> <span>Tríada de la información</span></a>
         <div className="nav-links">
-          <a href="#que-es">Concepto</a>
-          <a href="#triada">Los tres pilares</a>
-          <a href="#equilibrio">Equilibrio</a>
-          <a href="#gestion">Gestión</a>
-          <a href="#normativa">Normativa</a>
+          {LINKS.map(([id, label]) => (
+            <a key={id} href={`#${id}`} className={section === id ? 'act' : ''} onClick={() => setMenu(false)}>{label}</a>
+          ))}
         </div>
+        <a className="nav-cta" href="#triada">Ver los pilares</a>
+        <button className="menu-btn" aria-label={menu ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menu} onClick={() => setMenu(!menu)}>
+          <Icon name={menu ? 'close' : 'menu'} size={22} />
+        </button>
       </nav>
 
       {/* Hero */}
@@ -260,7 +297,7 @@ export default function App() {
           <p className="intro rv">Proteger no es maximizar un vértice. La gestión de seguridad busca el equilibrio que corresponde al riesgo y al negocio de cada organización.</p>
           <div className="grid3">
             {TRADEOFFS.map(([a, b, t], i) => (
-              <div className="card rv" key={a + b} style={{ '--d': `${i * 90}ms` }}>
+              <div className="card rv" key={a + b} style={{ '--delay': `${i * 90}ms` }}>
                 <div className="pair"><Tag k={a} /><span className="vs" /><Tag k={b} /></div>
                 <h3>{byKey[a].name} y {byKey[b].name.toLowerCase()}</h3>
                 <p>{t}</p>
@@ -277,7 +314,7 @@ export default function App() {
           <p className="intro rv">Un hospital público chileno guarda las historias de sus pacientes en un sistema digital. Los tres criterios aparecen a la vez.</p>
           <div className="case">
             {CASE.map(([k, t], i) => (
-              <div className="case-row rv" key={k} style={{ '--nc': byKey[k].color, '--d': `${i * 90}ms` }}>
+              <div className="case-row rv" key={k} style={{ '--nc': byKey[k].color, '--delay': `${i * 90}ms` }}>
                 <span className="case-ico"><Icon name={byKey[k].icon} size={26} /></span>
                 <div><h3>{byKey[k].name}</h3><p>{t}</p></div>
               </div>
@@ -293,7 +330,7 @@ export default function App() {
           <p className="intro rv">En un Sistema de Gestión de Seguridad de la Información (SGSI), la tríada es el criterio con el que se mide el impacto de cada riesgo. El proceso es un ciclo, no un proyecto que termina.</p>
           <ol className="cycle">
             {CYCLE.map(([ic, t, d], i) => (
-              <li className="rv" key={t} style={{ '--d': `${i * 110}ms` }}>
+              <li className="rv" key={t} style={{ '--delay': `${i * 110}ms` }}>
                 <span className="step-n">{i + 1}</span>
                 <Icon name={ic} size={28} />
                 <h3>{t}</h3>
@@ -311,7 +348,7 @@ export default function App() {
           <p className="intro rv">Cada norma protege uno o varios vértices de la tríada. Los iconos indican cuáles.</p>
           <div className="timeline">
             {LAW.map(([y, n, d, tags], i) => (
-              <div className="t-item rv" key={n} style={{ '--d': `${(i % 3) * 60}ms` }}>
+              <div className="t-item rv" key={n} style={{ '--delay': `${(i % 3) * 60}ms` }}>
                 <span className="t-year">{y}</span>
                 <div className="t-body">
                   <div className="t-head"><h3>{n}</h3><span className="tags">{tags.map((k) => <Tag k={k} key={k} />)}</span></div>
@@ -329,7 +366,7 @@ export default function App() {
           <h2 className="rv">Conceptos que complementan la tríada</h2>
           <div className="grid3">
             {EXTRA.map(([ic, t, d], i) => (
-              <div className="card rv" key={t} style={{ '--d': `${i * 90}ms` }}>
+              <div className="card rv" key={t} style={{ '--delay': `${i * 90}ms` }}>
                 <span className="plain-ico"><Icon name={ic} size={26} /></span>
                 <h3>{t}</h3>
                 <p>{d}</p>
@@ -341,14 +378,33 @@ export default function App() {
 
       {/* Cierre */}
       <footer className="end">
-        <div className="wrap rv">
-          <h2>En resumen</h2>
-          <div className="sum">
-            {PILLARS.map((p) => (
-              <div key={p.key} style={{ '--nc': p.color }}><span className="q-ico"><Icon name={p.icon} /></span><p>{p.name}: {p.lead.toLowerCase().replace(/\.$/, '')}.</p></div>
-            ))}
+        <div className="wrap">
+          <div className="rv">
+            <h2>En resumen</h2>
+            <div className="sum">
+              {PILLARS.map((p) => (
+                <div key={p.key} style={{ '--nc': p.color }}><span className="q-ico"><Icon name={p.icon} /></span><p>{p.name}: {p.lead.toLowerCase().replace(/\.$/, '')}.</p></div>
+              ))}
+            </div>
           </div>
-          <small>Material educativo para Gestión de Seguridad de la Información. Verifica la vigencia de cada ley en bcn.cl.</small>
+          <div className="foot-grid">
+            <div className="foot-brand">
+              <a className="brand" href="#top"><Logo size={38} /> <span>Tríada de la información</span></a>
+              <p>Infografía educativa sobre confidencialidad, integridad y disponibilidad, vistas desde la gestión de seguridad de la información y el marco normativo chileno.</p>
+            </div>
+            <div>
+              <h3>Recorrido</h3>
+              <ul>{LINKS.map(([id, label]) => <li key={id}><a href={`#${id}`}>{label}</a></li>)}</ul>
+            </div>
+            <div>
+              <h3>Fuentes oficiales</h3>
+              <ul>{SOURCES.map(([label, url]) => <li key={url}><a href={url} target="_blank" rel="noreferrer">{label} <Icon name="external" size={14} /></a></li>)}</ul>
+            </div>
+          </div>
+          <div className="foot-bottom">
+            <small>Material educativo para la asignatura Gestión de Seguridad de la Información. Verifica la vigencia de cada ley en bcn.cl.</small>
+            <a className="to-top" href="#top">Volver arriba <Icon name="down" size={16} style={{ transform: 'rotate(180deg)' }} /></a>
+          </div>
         </div>
       </footer>
     </main>
