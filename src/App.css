@@ -237,6 +237,19 @@ h1, h2, h3 { color: var(--title); }
 }
 
 /* ============ Pantalla completa: anula los estilos por defecto de Vite ============ */
-html, body { margin: 0; padding: 0; width: 100%; min-width: 0; display: block; place-items: initial; overflow-x: hidden; }
+html, body { margin: 0; padding: 0; width: 100%; min-width: 0; display: block; place-items: initial; }
+body { overflow-x: clip; }
 #root { max-width: none; width: 100%; margin: 0; padding: 0; text-align: left; }
 main { width: 100%; }
+
+/* ============ Arreglo de la seccion de los tres pilares ============ */
+/* position: sticky no funciona si html/body tienen overflow hidden; se usa clip arriba. */
+.stage { align-items: start; }
+.stage-visual { align-self: start; }
+.block { max-width: 660px; }
+.block.on { opacity: 1; }
+.block:not(.on) { opacity: .35; }
+@media (min-width: 960px) {
+  .stage-visual { height: calc(100svh - 3.6rem); }
+  .block { margin-inline: auto 0; padding-right: 2rem; }
+}
