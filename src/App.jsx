@@ -21,6 +21,12 @@ const PATHS = {
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
   external: <path d="M14 4h6v6M20 4 10 14M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />,
+  arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  check: <path d="m5 12.500 4.500 4.500L19 7.500" />,
+  linkedin: <path d="M6 10v9M6 5.500v.1M11 19v-5.500a3 3 0 0 1 6 0V19M11 10v9" />,
+  x: <path d="M5 5l14 14M19 5 5 19" />,
+  facebook: <path d="M14 8.500h3V4.500h-3a4 4 0 0 0-4 4V11H7v4h3v6h4v-6h3l1-4h-4V8.500z" />,
+  whatsapp: <path d="M4 20l1.300-4.200A8 8 0 1 1 8.300 18.800zM9.200 8.800c0 3.200 2.800 6 6 6" />,
   layers: <path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5" />,
 }
 
@@ -109,10 +115,26 @@ const EXTRA = [
 ]
 
 const LINKS = [['que-es', 'Concepto'], ['triada', 'Los tres pilares'], ['equilibrio', 'Equilibrio'], ['gestion', 'Gestión'], ['normativa', 'Normativa']]
+
 const SOURCES = [
   ['Biblioteca del Congreso Nacional', 'https://www.bcn.cl/leychile'],
   ['Agencia Nacional de Ciberseguridad (ANCI)', 'https://anci.gob.cl'],
   ['CSIRT de Gobierno', 'https://www.csirt.gob.cl'],
+]
+
+const FOOT = [
+  { title: 'La tríada', groups: [
+    ['Fundamentos', [['Concepto', '#que-es'], ['Los tres pilares', '#triada'], ['Equilibrio entre pilares', '#equilibrio']]],
+    ['Aplicación', [['Caso: ficha clínica electrónica', '#caso'], ['Gestión del riesgo', '#gestion']]],
+  ] },
+  { title: 'Marco en Chile', groups: [
+    ['Leyes', [['Ley 19.628 y Ley 21.719', '#normativa'], ['Ley 19.799 firma electrónica', '#normativa'], ['Ley 21.459 delitos informáticos', '#normativa'], ['Ley 21.663 Ciberseguridad', '#normativa']]],
+    ['Estándares', [['DS 83 y NCh-ISO 27001', '#normativa']]],
+  ] },
+  { title: 'Más', groups: [
+    [null, [['Conceptos complementarios', '#complementos'], ['En resumen', '#resumen'], ['Volver arriba', '#top']]],
+    ['Centro de referencia', SOURCES.map(([l, u]) => [l, u])],
+  ] },
 ]
 
 const byKey = Object.fromEntries(PILLARS.map((p) => [p.key, p]))
@@ -159,6 +181,7 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
   const [section, setSection] = useState('top')
+  const [copied, setCopied] = useState(false)
   const bar = useRef(null)
   const blocks = useRef([])
 
@@ -202,6 +225,18 @@ export default function App() {
     ;['top', ...LINKS.map((l) => l[0])].forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el) })
     return () => io.disconnect()
   }, [])
+
+  const url = typeof window !== 'undefined' ? window.location.href : ''
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2200) } catch { /* sin permiso */ }
+  }
+  const enc = encodeURIComponent(url)
+  const SHARE = [
+    ['linkedin', 'LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`],
+    ['x', 'X', `https://twitter.com/intent/tweet?url=${enc}`],
+    ['facebook', 'Facebook', `https://www.facebook.com/sharer/sharer.php?u=${enc}`],
+    ['whatsapp', 'WhatsApp', `https://wa.me/?text=${enc}`],
+  ]
 
   const current = active ? byKey[active] : null
 
@@ -308,7 +343,7 @@ export default function App() {
       </section>
 
       {/* Caso */}
-      <section className="sec">
+      <section id="caso" className="sec">
         <div className="wrap">
           <h2 className="rv">Un caso: la ficha clínica electrónica</h2>
           <p className="intro rv">Un hospital público chileno guarda las historias de sus pacientes en un sistema digital. Los tres criterios aparecen a la vez.</p>
@@ -361,7 +396,7 @@ export default function App() {
       </section>
 
       {/* Mas alla */}
-      <section className="sec alt">
+      <section id="complementos" className="sec alt">
         <div className="wrap">
           <h2 className="rv">Conceptos que complementan la tríada</h2>
           <div className="grid3">
@@ -377,33 +412,54 @@ export default function App() {
       </section>
 
       {/* Cierre */}
-      <footer className="end">
-        <div className="wrap">
-          <div className="rv">
-            <h2>En resumen</h2>
-            <div className="sum">
-              {PILLARS.map((p) => (
-                <div key={p.key} style={{ '--nc': p.color }}><span className="q-ico"><Icon name={p.icon} /></span><p>{p.name}: {p.lead.toLowerCase().replace(/\.$/, '')}.</p></div>
+      <section id="resumen" className="end">
+        <div className="wrap rv">
+          <h2>En resumen</h2>
+          <div className="sum">
+            {PILLARS.map((p) => (
+              <div key={p.key} style={{ '--nc': p.color }}><span className="q-ico"><Icon name={p.icon} /></span><p>{p.name}: {p.lead.toLowerCase().replace(/\.$/, '')}.</p></div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="site-foot">
+        <div className="wrap foot-cols">
+          {FOOT.map((col) => (
+            <div key={col.title}>
+              <h3 className="foot-h">{col.title}</h3>
+              {col.groups.map(([sub, links]) => (
+                <div className="foot-group" key={sub || 'main'}>
+                  {sub && <h4 className="foot-sub">{sub}</h4>}
+                  <ul>
+                    {links.map(([label, href]) => (
+                      <li key={label}>
+                        <a href={href} {...(href.startsWith('http') ? { target: '_blank', rel: 'noreferrer' } : {})}>{label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          ))}
+          <div className="foot-share">
+            <div className="copy-box">
+              <input readOnly value={url} aria-label="Enlace de la infografía" onFocus={(e) => e.target.select()} />
+              <button onClick={copy} aria-label="Copiar enlace"><Icon name={copied ? 'check' : 'arrow'} size={22} /></button>
+            </div>
+            <p className="copy-note">{copied ? 'Enlace copiado al portapapeles.' : 'Copia el enlace para compartir esta infografía con tu curso o tu equipo.'}</p>
+            <h3 className="foot-h">Comparte esta infografía</h3>
+            <div className="soc-row">
+              {SHARE.map(([ic, name, href]) => (
+                <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Compartir en ${name}`}><Icon name={ic} size={22} /></a>
               ))}
             </div>
           </div>
-          <div className="foot-grid">
-            <div className="foot-brand">
-              <a className="brand" href="#top"><Logo size={38} /> <span>Tríada de la información</span></a>
-              <p>Infografía educativa sobre confidencialidad, integridad y disponibilidad, vistas desde la gestión de seguridad de la información y el marco normativo chileno.</p>
-            </div>
-            <div>
-              <h3>Recorrido</h3>
-              <ul>{LINKS.map(([id, label]) => <li key={id}><a href={`#${id}`}>{label}</a></li>)}</ul>
-            </div>
-            <div>
-              <h3>Fuentes oficiales</h3>
-              <ul>{SOURCES.map(([label, url]) => <li key={url}><a href={url} target="_blank" rel="noreferrer">{label} <Icon name="external" size={14} /></a></li>)}</ul>
-            </div>
-          </div>
-          <div className="foot-bottom">
+        </div>
+        <div className="foot-legal">
+          <div className="wrap foot-legal-in">
+            <a className="brand" href="#top"><Logo size={28} /> <span>Tríada de la información</span></a>
             <small>Material educativo para la asignatura Gestión de Seguridad de la Información. Verifica la vigencia de cada ley en bcn.cl.</small>
-            <a className="to-top" href="#top">Volver arriba <Icon name="down" size={16} style={{ transform: 'rotate(180deg)' }} /></a>
           </div>
         </div>
       </footer>

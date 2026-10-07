@@ -218,3 +218,29 @@ a:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
 .to-top { display: inline-flex; align-items: center; gap: .4rem; color: #fff; text-decoration: none; font-weight: 600; font-size: .93rem; padding: .5rem 1rem; border: 1px solid rgba(255,255,255,.22); border-radius: 9px; transition: background .2s; }
 .to-top:hover { background: rgba(255,255,255,.1); }
 @media (min-width: 960px) { .foot-grid { grid-template-columns: 1.5fr 1fr 1.2fr; gap: 4rem; } }
+
+/* ============ Pie de pagina (estilo corporativo) ============ */
+.end { border-image: none; border-top: 0; background: linear-gradient(160deg, var(--deep), var(--navy)); padding-bottom: clamp(3rem, 7vw, 5rem); }
+.end .sum { margin-bottom: 0; }
+.site-foot { background: #000; color: #fff; font-size: .97rem; border-top: 3px solid transparent; border-image: linear-gradient(90deg, var(--c), var(--i), var(--d)) 1; }
+.foot-cols { display: grid; gap: 2.4rem; padding: 3.5rem 0 3rem; }
+.site-foot a { color: #fff; text-decoration: none; transition: color .2s; }
+.site-foot ul a:hover { color: var(--d); text-decoration: underline; text-underline-offset: 4px; }
+.foot-h { color: #fff; font: 800 .95rem var(--body); text-transform: uppercase; letter-spacing: .01em; margin: 0 0 1.3rem; }
+.foot-sub { color: #fff; font: 700 1rem var(--body); margin: 0 0 .9rem; }
+.foot-group { margin-bottom: 1.6rem; }
+.site-foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+.copy-box { display: flex; max-width: 380px; }
+.copy-box input { flex: 1; min-width: 0; height: 46px; padding: 0 .9rem; border: 0; border-radius: 4px 0 0 4px; background: #fff; color: #333; font: .93rem var(--body); }
+.copy-box button { flex: none; width: 46px; height: 46px; border: 0; border-radius: 0 4px 4px 0; background: var(--d); color: #fff; display: grid; place-items: center; cursor: pointer; transition: background .2s; }
+.copy-box button:hover { background: #f0493f; }
+.copy-box button:focus-visible, .copy-box input:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.copy-note { color: #bdbdbd; font-size: .93rem; margin: 1rem 0 2.2rem; max-width: 34ch; }
+.soc-row { display: flex; gap: 1.2rem; align-items: center; }
+.soc-row a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #333; transition: background .2s, border-color .2s, transform .2s; }
+.soc-row a:hover { background: var(--d); border-color: var(--d); transform: translateY(-2px); }
+.foot-legal { border-top: 1px solid #222; background: #0a0a0a; }
+.foot-legal-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem 2rem; padding: 1.2rem 0; }
+.foot-legal small { color: #9a9a9a; max-width: 62ch; }
+@media (min-width: 640px) { .foot-cols { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .foot-cols { grid-template-columns: 1fr 1fr 1fr 1.15fr; gap: 3rem; } }
