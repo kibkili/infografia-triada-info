@@ -96,13 +96,13 @@ const EXTRA = [
 const byKey = Object.fromEntries(PILLARS.map((p) => [p.key, p]))
 
 /* ---------- Triángulo ---------- */
-const NODE = { C: [150, 46], I: [46, 226], D: [254, 226] }
+const NODE = { C: [180, 46], I: [62, 226], D: [298, 226] }
 
 function Triad({ active = null, center = null }) {
   return (
-    <svg className="triad" viewBox="0 0 300 290" role="img" aria-label="Triángulo de la tríada: confidencialidad, integridad y disponibilidad">
-      <path className="tri-fill" d="M150 46 L46 226 L254 226 Z" />
-      <path className="tri-line" pathLength="1" d="M150 46 L46 226 L254 226 Z" />
+    <svg className="triad" viewBox="0 0 360 290" role="img" aria-label="Triángulo de la tríada: confidencialidad, integridad y disponibilidad">
+      <path className="tri-fill" d="M180 46 L62 226 L298 226 Z" />
+      <path className="tri-line" pathLength="1" d="M180 46 L62 226 L298 226 Z" />
       {PILLARS.map((p) => {
         const [x, y] = NODE[p.key]
         const on = active === p.key
@@ -118,9 +118,9 @@ function Triad({ active = null, center = null }) {
         )
       })}
       {center ? (
-        <text x="150" y="172" textAnchor="middle" className="tri-center" key={center}>{center}</text>
+        <text x="180" y="172" textAnchor="middle" className="tri-center" key={center}>{center}</text>
       ) : (
-        <Icon name="shield" x="132" y="142" width="36" height="36" className="tri-shield" />
+        <Icon name="shield" x="162" y="142" width="36" height="36" className="tri-shield" />
       )}
     </svg>
   )
