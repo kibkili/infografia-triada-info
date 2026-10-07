@@ -33,7 +33,7 @@ function Icon({ name, size = 24, ...rest }) {
 /* ---------- Contenido ---------- */
 const PILLARS = [
   {
-    key: 'C', name: 'Confidencialidad', icon: 'lock', color: 'var(--c)',
+    key: 'C', name: 'Confidencialidad', q: '¿Quién puede verlo?', icon: 'lock', color: 'var(--c)',
     lead: 'La información solo es accesible para quienes están autorizados a conocerla.',
     body: 'Se trata de impedir la divulgación indebida. No importa si el dato es correcto o está disponible: si lo ve quien no debe, la confidencialidad se perdió. En gestión de seguridad se aplica el principio de mínimo privilegio y la clasificación de la información según su valor.',
     threats: [['eye', 'Acceso no autorizado'], ['key', 'Phishing y robo de credenciales'], ['layers', 'Filtración de bases de datos']],
@@ -41,7 +41,7 @@ const PILLARS = [
     chile: 'Los datos personales y sensibles, como los de salud o los socioeconómicos, están protegidos por la Ley 19.628 y por la nueva Ley 21.719, que fortalece los derechos de las personas y las obligaciones de quienes tratan sus datos.',
   },
   {
-    key: 'I', name: 'Integridad', icon: 'hash', color: 'var(--i)',
+    key: 'I', name: 'Integridad', q: '¿Es correcto y exacto?', icon: 'hash', color: 'var(--i)',
     lead: 'La información es exacta y completa, y solo cambia por acciones autorizadas.',
     body: 'Protege contra la modificación accidental o maliciosa. Un informe alterado, una transferencia con el monto cambiado o un registro clínico editado sin trazabilidad son fallas de integridad, aunque nadie haya robado nada.',
     threats: [['pencil', 'Modificación no autorizada'], ['bolt', 'Malware e inyección de datos'], ['doc', 'Errores humanos de ingreso']],
@@ -49,7 +49,7 @@ const PILLARS = [
     chile: 'La Ley 19.799 da valor jurídico a los documentos electrónicos y a la firma electrónica, y la Ley 21.459 sanciona la falsificación informática y el acceso ilícito a sistemas.',
   },
   {
-    key: 'D', name: 'Disponibilidad', icon: 'pulse', color: 'var(--d)',
+    key: 'D', name: 'Disponibilidad', q: '¿Puedo usarlo ahora?', icon: 'pulse', color: 'var(--d)',
     lead: 'La información y los sistemas están operativos cuando las personas los necesitan.',
     body: 'Un dato perfecto y bien protegido no sirve si no se puede usar en el momento clave. La disponibilidad se mide en tiempos de respuesta, tiempos de recuperación (RTO) y puntos de recuperación (RPO), y se planifica antes de que ocurra el incidente.',
     threats: [['bolt', 'Ransomware'], ['pulse', 'Ataques de denegación de servicio'], ['risk', 'Sismos, cortes de energía y fallas']],
@@ -219,14 +219,15 @@ export default function App() {
       </section>
 
       {/* Escenario fijo */}
-      <section id="triada" className="stage" style={{ '--accent': current ? current.color : 'var(--paper)' }}>
+      <section id="triada" className="stage" style={{ '--accent': current ? current.color : 'var(--c)' }}>
         <div className="stage-visual">
-          <Triad active={active} center={current ? current.name : null} />
+          <Triad active={active} center={current ? current.q : null} />
         </div>
         <div className="stage-blocks">
           {PILLARS.map((p, i) => (
             <article key={p.key} data-key={p.key} ref={(el) => (blocks.current[i] = el)}
               className={`block ${active === p.key ? 'on' : ''}`} style={{ '--nc': p.color }}>
+              <div className="panel">
               <span className="block-ico"><Icon name={p.icon} size={30} /></span>
               <h2>{p.name}</h2>
               <p className="lead">{p.lead}</p>
@@ -246,6 +247,7 @@ export default function App() {
                 </div>
               </div>
               <div className="chile"><Icon name="star" size={18} /><p><strong>En Chile.</strong> {p.chile}</p></div>
+            </div>
             </article>
           ))}
         </div>
